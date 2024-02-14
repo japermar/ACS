@@ -17,6 +17,10 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/test', function () {
+    return ('<p>Test htmx </p>');
+});
+
 use Illuminate\Support\Facades\Mail;
 use App\Mail\TestEmail;
 
