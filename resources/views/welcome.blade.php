@@ -48,9 +48,9 @@
             </a>
             <nav role="navigation" class="navbar-menu overflow-hidden w-nav-menu"><a
                     href="/login"
-                    class="navbar-link w-nav-link">Log In</a><a
+                    class="navbar-link w-nav-link">Acceder</a><a
                     href="/register"
-                    class="button in-nav w-button">Sign Up</a></nav>
+                    class="button in-nav w-button">Registro</a></nav>
             <div class="navbar_menu-button w-nav-button">
                 <div class="menu-icon">
                     <div class="menu-icon_line-top"></div>
@@ -76,7 +76,7 @@
                         administrar tu VPS de una forma grafica comoda e intuitia sin necesidad de recordar
                         comandos.</p>
                     <div class="spacer_l"></div>
-                    <a href="#" class="button w-button">Registrate</a></div>
+                    <a href="/register" class="button w-button">Registrate</a></div>
                 <img src="{{asset('img/nube.jpg')}}" loading="lazy"
                      id="w-node-_05440e2b-310f-d781-83e6-e169aaed8502-2c4ffd25" sizes="90vw" alt=""
                      class="hero-image tall"></div>
@@ -114,7 +114,7 @@
                     <p class="paragraph">Nuestro objetivo es conseguir que el despliegue de aplicaciones web o
                         configuraciones de servidores sea lo mas comoda y facil posible .</p>
                     <div class="spacer_l"></div>
-                    <a href="#" class="button secondary w-button">Crear cuenta</a></div>
+                    <a href="/register" class="button secondary w-button">Crear cuenta</a></div>
             </div>
         </div>
     </div>
