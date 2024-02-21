@@ -55,9 +55,6 @@ class User extends Authenticatable
     {
         return $this->hasMany(
             \App\Models\Actividad::class, 'user_id');
-
-
-
     }
 
 
