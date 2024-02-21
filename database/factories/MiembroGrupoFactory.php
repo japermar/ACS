@@ -16,7 +16,7 @@ class MiembroGrupoFactory extends Factory
         return [
             'grupo_id' => GruposColaboracion::factory(),
             'user_id' => User::factory(),
-            'rol' => $this->faker->randomElement(['admin', 'monitor', 'editar']),
+            'rol' => $this->faker->randomElement(['admin', 'monitor']),
             'created_at' => $this->faker->dateTime,
             'updated_at' => $this->faker->dateTime,
         ];
