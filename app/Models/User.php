@@ -42,4 +42,23 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+    public function grupos()
+    {
+        return $this->belongsToMany(
+            \App\Models\GruposColaboracion::class, // Adjust the namespace according to your application structure
+            'miembros_grupo', // Pivot table name
+            'user_id', // Column name in the pivot table referencing the user ID
+            'grupo_id' // Column name in the pivot table referencing the group ID
+        )->withPivot('rol'); // Include 'rol' or any other columns you need from the pivot table
+    }
+    public function actividades()
+    {
+        return $this->hasMany(
+            \App\Models\Actividad::class, 'user_id');
+
+
+
+    }
+
+
 }

@@ -23,6 +23,10 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        $user = auth()->user();
+        $grupos = $user->grupos()->get()->toArray();
+        $actividades = $user->actividades()->get()->toArray();
+//        var_dump($grupos);
+        return view('home', compact(['grupos', 'user', 'actividades']));
     }
 }

@@ -16,4 +16,5 @@ public function miembrosGrupo()
 {
 return $this->hasMany(MiembroGrupo::class);
 }
+
 }
