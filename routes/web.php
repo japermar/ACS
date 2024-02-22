@@ -39,6 +39,7 @@ Auth::routes();
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 
 Route::get('/grupo/{group_id}', [VpsController::class, 'index'])->name('ver_grupo');
+Route::get('/grupo/{group_id}/vps/{vps_id}', [\App\Http\Controllers\EspecificoController::class, 'index'])->name('especifico');
 
 
 

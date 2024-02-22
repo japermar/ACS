@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Servidor;
 use Illuminate\Http\Request;
 
-class VpsController extends Controller
+class EspecificoController extends Controller
 {
 
     public function __construct()
@@ -14,22 +14,16 @@ class VpsController extends Controller
     }
 
 
-    public function index($grupo_id)
+    public function index($grupo_id, $vps_id)
     {
         $user = auth()->user();
-
-        $grupos = $user->grupos()->get();
-        $actividades = $user->actividades()->get()->toArray(); // Assuming 'actividades' is a correctly defined relationship
-
         $perteneceAlGrupo = $user->perteneceAlGrupo($grupo_id);
-
         if (!$perteneceAlGrupo) {
             // If the user does not belong to the group, redirect back with an error message
             return redirect()->back()->withErrors(['error' => "No tienes acceso al grupo " . $grupo_id]);
         }
-        $miembro = $user->esAdmin($grupo_id);
-        $servidores = Servidor::where('grupo_id', $grupo_id)->get();
-        return view('vps.listar', compact('grupos', 'actividades', 'user', 'grupo_id' ,'servidores'));
+        $esAdmin = $user->esAdmin($grupo_id);
+        return view('vps.especifico', compact('esAdmin'));
     }
 
 

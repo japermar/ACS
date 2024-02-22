@@ -51,10 +51,24 @@ class User extends Authenticatable
             'grupo_id' // Column name in the pivot table referencing the group ID
         )->withPivot('rol'); // Include 'rol' or any other columns you need from the pivot table
     }
+    public function perteneceAlGrupo($grupo_id)
+    {
+        return $this->grupos()->where('grupos_colaboracion.id', $grupo_id)->exists();
+
+    }
+    public function esAdmin($grupo_id)
+    {
+         return strtolower($this->miembros()->where('grupo_id', $grupo_id)->first()->rol)=='admin';
+    }
     public function actividades()
     {
         return $this->hasMany(
             \App\Models\Actividad::class, 'user_id');
+    }
+    public function miembros()
+    {
+        return $this->hasMany(
+            \App\Models\MiembroGrupo::class, 'user_id');
     }
 
 
