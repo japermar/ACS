@@ -1,9 +1,12 @@
 @extends('layouts.app')
 
 @section('content')
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    @vite(['resources/sass/app.scss', 'resources/js/graph.js','resources/js/app.js', 'resources/js/htmx.js', 'resources/js/event.js'])
+
     <div class="container my-4">
         <div class="card">
-            <p>{{$result}}</p>
+            <p>{{$servidor['nombre_servidor']}}</p>
             <div class="card-header">
                 Información de Hardware
             </div>
@@ -36,7 +39,15 @@
                 </div>
             </div>
         </div>
-        @if($esAdmin)
+        <button hx-post="{{ route('monitorizar', [$grupo_id, $vps_id]) }}" hx-target="#response" hx-indicator="#spinner" class="btn btn-primary">Monitorizar servidor</button>
+        <div id="response"></div>
+
+        <!-- Spinner -->
+        <div id="spinner" style="display:none;" class="text-center">
+            <div class="spinner-border" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </div>        @if($esAdmin)
             <div class="alert alert-success mt-4" role="alert">
                 Eres admin. Como eres admin, puedes:
             </div>
