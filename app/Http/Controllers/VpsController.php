@@ -29,7 +29,8 @@ class VpsController extends Controller
         }
         $miembro = $user->esAdmin($grupo_id);
         $servidores = Servidor::where('grupo_id', $grupo_id)->get();
-        return view('vps.listar', compact('grupos', 'actividades', 'user', 'grupo_id' ,'servidores'));
+        $grupo = $user->obtenerGrupo($grupo_id);
+        return view('vps.listar', compact('grupos','grupo' ,'actividades', 'user', 'grupo_id' ,'servidores', 'miembro'));
     }
 
 

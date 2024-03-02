@@ -6,7 +6,7 @@
         <h1 class="mb-4">Los VPS que tiene este equipo son:</h1>
 
         <div class="row">
-            @foreach($servidores as $pc)
+           @foreach($servidores as $pc)
 
                 <div class="col-md-4 mb-4">
                     <div class="card">
@@ -25,5 +25,7 @@
                 </div>
             @endforeach
         </div>
+
+        <span><a href="{{route('administrar_grupo', ['grupo_id'=>$grupo_id])}}">Pulse aqui si quiere administrar el grupo {{$grupo['nombre_grupo']}}</a></span>
     </div>
 @endsection

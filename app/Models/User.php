@@ -56,6 +56,10 @@ class User extends Authenticatable
         return $this->grupos()->where('grupos_colaboracion.id', $grupo_id)->exists();
 
     }
+    public function obtenerGrupo($grupo_id){
+        return $this->grupos()->where('grupos_colaboracion.id', $grupo_id)->first()->toArray();
+
+    }
     public function esAdmin($grupo_id)
     {
          return strtolower($this->miembros()->where('grupo_id', $grupo_id)->first()->rol)=='admin';
