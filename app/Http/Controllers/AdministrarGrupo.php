@@ -33,7 +33,14 @@ class AdministrarGrupo extends Controller
         if(!$miembro){
             return redirect()->back()->withErrors(['error'=>'No eres administrador del grupo por lo tanto no puedes invitar a ningun miembro']);
         }
-        return view('grupos.panel', compact(['user', 'grupo']));
+
+$miembroUserIds = MiembroGrupo::where('grupo_id', $grupo_id)
+    ->where('user_id', '!=', $user->id)
+    ->pluck('user_id');
+
+$miembros = \App\Models\User::whereIn('id', $miembroUserIds)->get();
+
+        return view('grupos.panel', compact(['user', 'grupo', 'miembros']));
     }
 
 
@@ -107,6 +114,51 @@ class AdministrarGrupo extends Controller
     // Save the new MiembroGrupo instance to the database
     $miembroGrupo->save();
         return redirect()->back()->with('success', 'Notificacion de invitacion enviada con éxito.');
+    }
+
+
+    public function eliminar(Request $request, $grupo_id)
+    {
+        $user = auth()->user();
+        $miembro = $user->esAdmin($grupo_id);
+        if (!$user->perteneceAlGrupo($grupo_id) || !$miembro) {
+            $errorMessage = !$miembro ? "No eres administrador del grupo por lo tanto no puedes invitar a ningun miembro" : "No tienes acceso al grupo " . $grupo_id;
+            return redirect()->back()->withErrors(['error' => $errorMessage]);
+        }
+
+        $rules = [
+            'selected_users' => [
+                'required',
+                'array', // Ensure it's an array
+                'min:1', // Ensure there's at least one selection
+            ],
+            'selected_users.*' => [
+                'numeric', // Check that each item in the array is numeric
+            ]
+        ];
+
+// Custom error messages
+        $messages = [
+            'selected_users.required' => 'Debe seleccionar al menos un usuario para eliminar.',
+            'selected_users.array' => 'La selección debe ser un conjunto válido de usuarios.',
+            'selected_users.min' => 'Debe seleccionar al menos un usuario para eliminar.',
+            'selected_users.*.numeric' => 'Los usuarios enviados para eliminar no tienen un formato correcto.', // Error message for each item in the array
+        ];
+
+// Perform validation
+        $validator = Validator::make($request->all(), $rules, $messages);
+
+        if ($validator->fails()) {
+            // Handle failed validation
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput();
+        }
+        MiembroGrupo::where('grupo_id', $grupo_id)
+            ->whereIn('user_id', $request->selected_users)
+            ->delete();
+        return redirect()->back()->with('success', 'Miembros eliminados con éxito.');
+
     }
 
 

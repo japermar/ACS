@@ -43,6 +43,7 @@ Route::get('/administrar/{grupo_id}', [\App\Http\Controllers\AdministrarGrupo::c
 Route::get('/grupo/{group_id}/vps/{vps_id}', [\App\Http\Controllers\EspecificoController::class, 'index'])->name('especifico');
 Route::post('/monitorizar/{grupo_id}/{vps_id}', [\App\Http\Controllers\EspecificoController::class, 'monitorizar'])->name('monitorizar');
 Route::post('administrar/invitar/{grupo_id}/', [\App\Http\Controllers\AdministrarGrupo::class, 'invitar'])->name('invitar');
+Route::post('administrar/eliminar/{grupo_id}/', [\App\Http\Controllers\AdministrarGrupo::class, 'eliminar'])->name('eliminar');
 
 
 
