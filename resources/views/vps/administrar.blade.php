@@ -6,7 +6,7 @@
     <div class="container mt-5">
         <h1 class="mb-4">Ahora estas controlando el servidor {{$servidor['nombre_servidor']}}</h1>
 
-        <button hx-post="{{ route('instalar_docker', [$grupo_id, $servidor['id']]) }}" hx-target="#response" hx-indicator="#spinner" class="btn btn-primary">Revisar si docker esta instalado</button>
+        <button hx-post="{{ route('instalar_docker', [$grupo_id, $servidor['id']]) }}" hx-target="#response" hx-indicator="#spinner" class="btn btn-primary mb-4">Revisar si docker esta instalado</button>
 {{--        <button hx-post="{{ route('revisar_docker', [$grupo_id, $servidor['id']]) }}" hx-target="#response" hx-indicator="#spinner" class="btn btn-primary">Desinstalar docker</button>--}}
 {{--        <button hx-post="{{ route('revisar_docker', [$grupo_id, $servidor['id']]) }}" hx-target="#response" hx-indicator="#spinner" class="btn btn-primary">Revisar si docker esta instalado</button>--}}
         <div id="response"></div>
