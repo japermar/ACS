@@ -52,7 +52,7 @@
                 Eres admin. Como eres admin, puedes:
             </div>
             <ul class="list-group">
-                <li class="list-group-item"><a href="#" class="stretched-link">Instalar o desinstalar apps para este VPS</a></li>
+                <li class="list-group-item"><a href="{{route('monitorizar_vps', ['grupo_id' =>$grupo_id, 'vps_id' =>$vps_id])}}" class="stretched-link">Instalar o desinstalar apps para este VPS</a></li>
                 <li class="list-group-item"><a href="#" class="stretched-link">Monitorizarlo</a></li>
                 <li class="list-group-item" style="display: none;"><a href="#" class="stretched-link">Conocer la info de hardware del mismo</a></li>
                 <li class="list-group-item"><a href="#" class="stretched-link">Ejecutar custom scripts</a></li>

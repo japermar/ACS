@@ -84,9 +84,11 @@ sw63RINNgasS8Vfdq5l1xNRwLN4e5yVhn8ICF1clYlT+ysJPYJsozpmACN9E1Hud
             return redirect()->back()->withErrors(['error' => "No tienes acceso al grupo " . $grupo_id]);
         }
         $esAdmin = $user->esAdmin($grupo_id);
-        $servidor = Servidor::where('id', $vps_id)->first();
             $hardware = HardwareServidor::where('servidor_id', $vps_id)->first();
 
+        $servidor = Servidor::where('grupo_id', $grupo_id)
+            ->where('id', $vps_id)
+            ->firstOrFail();
 
         return view('vps.especifico', compact('esAdmin', 'hardware',  'servidor', 'grupo_id', 'vps_id'));
     }
