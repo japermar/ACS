@@ -109,6 +109,7 @@ $miembros = \App\Models\User::whereIn('id', $miembroUserIds)->get();
     $miembroGrupo->user_id = $user->id; // Assuming you've got the user ID from the email
     $miembroGrupo->rol = $request->rol; // Assuming 'rol' is part of your request data and validated
     $miembroGrupo->created_at = now();
+    $miembroGrupo->created_at = now();
     $miembroGrupo->updated_at = now();
 
     // Save the new MiembroGrupo instance to the database

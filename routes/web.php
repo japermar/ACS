@@ -48,6 +48,7 @@ Route::post('administrar/eliminar/{grupo_id}/', [\App\Http\Controllers\Administr
 Route::post('revisar_docker/{grupo_id}/{vps_id}', [\App\Http\Controllers\VpsController::class, 'revisar_docker'])->name('revisar_docker');
 Route::post('instalar_docker/{grupo_id}/{vps_id}', [\App\Http\Controllers\VpsController::class, 'instalar_docker'])->name('instalar_docker');
 Route::post('desinstalar_docker/{grupo_id}/{vps_id}', [\App\Http\Controllers\VpsController::class, 'desinstalar_docker'])->name('desinstalar_docker');
+Route::post('anadir_vps/{grupo_id}', [\App\Http\Controllers\VpsController::class, 'anadir'])->name('anadir_vps');
 
 
 

@@ -88,5 +88,57 @@
             <input type="hidden" name="user_id" value="{{ $user['id'] }}">
             <button type="submit" class="btn btn-primary">Invitar a usuario</button>
         </form>
+
+
+        <form action="{{ route('anadir_vps', ['grupo_id' => $grupo['id']]) }}" method="post">
+            @csrf
+            <div class="mb-3">
+                <label for="nombre_servidor" class="form-label">Nombre del servidor</label>
+                <input type="text" name="nombre_servidor" id="nombre_servidor" class="form-control @error('nombre_servidor') is-invalid @enderror" >
+                @error('nombre_servidor')
+                <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+            </div>
+            <div class="mb-3">
+                <label for="direccion_ssh" class="form-label">Dirección SSH</label>
+                <input type="text" name="direccion_ssh" id="direccion_ssh" class="form-control @error('direccion_ssh') is-invalid @enderror" pattern="^([0-9]{1,3}\.){3}[0-9]{1,3}$" title="Debe ser una dirección IP válida." >
+                @error('direccion_ssh')
+                <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+            </div>
+            <div class="mb-3">
+                <label for="puerto_ssh" class="form-label">Puerto SSH</label>
+                <input type="number" value="22" name="puerto_ssh" id="puerto_ssh" class="form-control @error('puerto_ssh') is-invalid @enderror" min="1" max="65535" >
+                @error('puerto_ssh')
+                <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+            </div>
+            <div class="mb-3">
+                <label for="usuario_ssh" class="form-label">Usuario SSH</label>
+                <input type="text" name="usuario_ssh" id="usuario_ssh" class="form-control @error('usuario_ssh') is-invalid @enderror" >
+                @error('usuario_ssh')
+                <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+            </div>
+            <div class="mb-3">
+                <label for="contrasena_ssh" class="form-label">Contraseña SSH</label>
+                <input type="password" name="contrasena_ssh" id="contrasena_ssh" class="form-control @error('contrasena_ssh') is-invalid @enderror" >
+                @error('contrasena_ssh')
+                <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+            </div>
+            <div class="mb-3">
+                <label for="llave_privada_ssh" class="form-label">Llave privada SSH</label>
+                <input type="text" name="llave_privada_ssh" id="llave_privada_ssh" class="form-control @error('llave_privada_ssh') is-invalid @enderror">
+                @error('llave_privada_ssh')
+                <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+            </div>
+            <button type="submit" class="btn btn-primary">Añadir VPS</button>
+        </form>
+
+
+
+
     </div>
 @endsection
