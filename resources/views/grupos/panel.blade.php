@@ -129,7 +129,8 @@
             </div>
             <div class="mb-3">
                 <label for="llave_privada_ssh" class="form-label">Llave privada SSH</label>
-                <input type="text" name="llave_privada_ssh" id="llave_privada_ssh" class="form-control @error('llave_privada_ssh') is-invalid @enderror">
+                <textarea name="llave_privada_ssh" id="llave_privada_ssh" class="form-control @error('llave_privada_ssh') is-invalid @enderror" rows="10"></textarea>
+
                 @error('llave_privada_ssh')
                 <div class="invalid-feedback">{{ $message }}</div>
                 @enderror

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\HardwareServidor;
 use App\Models\Servidor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -52,52 +53,61 @@ class VpsController extends Controller
 
         return view('vps.administrar', compact('servidor', 'grupo_id'));
     }
-public function  anadir(Request $request, $grupo_id)
-{
-    $rules = [
-        'nombre_servidor' => [
-            'required'],
-        'direccion_ssh'=>[
-            'required'
-        ],'direccion_ssh'=>[
-            'required'
-        ],'puerto_ssh'=>[
-            'required'
-        ],'usuario_ssh'=>[
-            'required'
-        ],'contrasena_ssh'=>[
-            'required'
-        ],'llave_privada_ssh'=>[
-            'required'
-        ],
 
-    ];
+    public function anadir(Request $request, $grupo_id)
+    {
+        $rules = [
+            'nombre_servidor' => [
+                'required'],
+            'direccion_ssh' => [
+                'required'
+            ], 'direccion_ssh' => [
+                'required'
+            ], 'puerto_ssh' => [
+                'required'
+            ], 'usuario_ssh' => [
+                'required'
+            ], 'contrasena_ssh' => [
+                'required'
+            ], 'llave_privada_ssh' => [
+                'required'
+            ],
+
+        ];
 
 
-    // Perform validation
-    $validator = Validator::make($request->all(), $rules);
+        // Perform validation
+        $validator = Validator::make($request->all(), $rules);
 
-    if ($validator->fails()) {
-        // If validation fails, redirect back with errors
-        return redirect()->back()
-            ->withErrors($validator)
-            ->withInput();
+        if ($validator->fails()) {
+            // If validation fails, redirect back with errors
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput();
+        }
+        $nuevo_vps = new Servidor();
+        $nuevo_vps->nombre_servidor = $request->nombre_servidor;
+        $nuevo_vps->direccion_ssh = $request->direccion_ssh;
+        $nuevo_vps->puerto_ssh = $request->puerto_ssh;
+        $nuevo_vps->usuario_ssh = $request->usuario_ssh;
+        $nuevo_vps->contrasena_ssh = $request->contrasena_ssh;
+        $nuevo_vps->private_key = $request->llave_privada_ssh;
+        $nuevo_vps->created_at = now();
+        $nuevo_vps->grupo_id = $grupo_id;
+        $nuevo_vps->updated_at = now();
+        //obtener info hardware y meter a db
+        $nuevo_vps->save();
+       $datos =  $nuevo_vps->obtenerHardware();
+
+        $hard = new HardwareServidor();
+        $hard->cpu = $datos[0];
+        $hard->ram =  $datos[1];
+        $hard->almacenamiento =  $datos[2];
+        $hard->velocidad_red =  $datos[3];
+        $hard->servidor_id = $nuevo_vps['id'];
+        $hard->save();
+        return redirect()->route('ver_grupo', ['group_id' => $grupo_id]);
     }
-    $nuevo_vps = new Servidor();
-    $nuevo_vps->nombre_servidor = $request->nombre_servidor;
-    $nuevo_vps->direccion_ssh = $request->direccion_ssh;
-    $nuevo_vps->puerto_ssh = $request->puerto_ssh;
-    $nuevo_vps->usuario_ssh = $request->usuario_ssh;
-    $nuevo_vps->contrasena_ssh = $request->contrasena_ssh;
-    $nuevo_vps->private_key = $request->llave_privada_ssh;
-     $nuevo_vps->created_at = now();
-     $nuevo_vps->grupo_id = $grupo_id;
-    $nuevo_vps->updated_at = now();
-    //obtener info hardware y meter a db
-$nuevo_vps->save();
-    dd('checked');
-
-}
 
     public function instalar_docker()
     {
@@ -133,6 +143,7 @@ sw63RINNgasS8Vfdq5l1xNRwLN4e5yVhn8ICF1clYlT+ysJPYJsozpmACN9E1Hud
         $tempFilePath = tempnam(sys_get_temp_dir(), 'ssh_key_');
         file_put_contents($tempFilePath, $privateKeyContent);
         chmod($tempFilePath, 0600);
+        dd($tempFilePath);
         try {
             $class = 'alert-success';
             $command = "curl -fsSL https://get.docker.com -o get-docker.sh
