@@ -6,7 +6,7 @@
 
     <div class="container my-4">
         <div class="card">
-            <p>{{$servidor['nombre_servidor']}}</p>
+            <p style="margin-left: 5px">{{$servidor['nombre_servidor']}}</p>
             <div class="card-header">
                 Información de Hardware
             </div>
