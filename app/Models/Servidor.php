@@ -34,21 +34,26 @@ class Servidor extends Model
 
     public function ejecutar_comando($comando)
     {
+        $mensaje = 'Error executing command';
         try {
             $tempFilePath = tempnam(sys_get_temp_dir(), 'ssh_key_');
             file_put_contents($tempFilePath, $this['private_key']);
             chmod($tempFilePath, 0600);
-            $conexion = Ssh::create($this['usuario_ssh'], $this['direccion_ssh'])
-                ->usePrivateKey($tempFilePath)->disableStrictHostKeyChecking()->execute($comando);
-            $conexion->wait();
-            $resultado = $conexion->isSuccessful();
-            if ($resultado) {
-                $mensaje = $conexion->getOutput();
+            $process = Ssh::create($this['usuario_ssh'], $this['direccion_ssh'])
+                ->usePrivateKey($tempFilePath)
+                ->disableStrictHostKeyChecking()
+                ->execute($comando);
+            if ($process->isSuccessful()) {
+                $mensaje = $process->getOutput();
             } else {
-                $mensaje = $conexion->getErrorOutput();
+                $mensaje = 'Error: ' . $process->getErrorOutput();
             }
+        } catch (\Exception $e) {
+            $mensaje = "Exception caught: " . $e->getMessage();
         } finally {
-            unlink($tempFilePath);
+            if (isset($tempFilePath)) {
+                unlink($tempFilePath); // Ensure temporary file is deleted.
+            }
         }
         return $mensaje;
     }
