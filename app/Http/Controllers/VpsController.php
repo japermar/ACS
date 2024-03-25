@@ -137,6 +137,14 @@ class VpsController extends Controller
         $executionResult = $vps->ejecutar_comando($command);
         return '<p class="alert ' . $class . '" role="alert">' . htmlspecialchars($executionResult) . '</p>';
     }
+    public function servicios_docker($grupo_id, $vps_id)
+    {
+        $vps = \App\Models\Servidor::where('id', $vps_id)->first();
+        $class = 'alert-success';
+        $command = "docker ps";
+        $executionResult = $vps->ejecutar_comando($command);
+        return '<p class="alert ' . $class . '" role="alert">' . htmlspecialchars($executionResult) . '</p>';
+    }
 
 
 }
