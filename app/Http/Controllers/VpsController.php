@@ -15,6 +15,56 @@ class VpsController extends Controller
     {
         $this->middleware('auth');
     }
+    public function administrar_servicio($grupo_id, $vps_id)
+    {
+        $vps = \App\Models\Servidor::where('id', $vps_id)->first();
+        $imagesCommand = "docker images";
+        $output = $vps->ejecutar_comando($imagesCommand);
+
+        // Parse the output into an array of services
+        $lines = explode("\n", trim($output));
+        // Remove the header row
+        array_shift($lines);
+
+        $servicios = array_map(function($line) {
+            $columns = preg_split('/\s{2,}/', $line);
+            return [
+                'repository' => $columns[0] ?? '',
+                'tag' => $columns[1] ?? '',
+                'image_id' => $columns[2] ?? '',
+                'created' => $columns[3] ?? '',
+                'size' => $columns[4] ?? '',
+            ];
+        }, $lines);
+
+        return view('vps.servicios_instalados', compact('servicios'));
+
+    }
+
+    public function imagenes_instaladas($grupo_id, $vps_id)
+    {
+        $vps = \App\Models\Servidor::where('id', $vps_id)->first();
+        $imagesCommand = "docker images";
+        $output = $vps->ejecutar_comando($imagesCommand);
+
+        // Parse the output into an array of services
+        $lines = explode("\n", trim($output));
+        // Remove the header row
+        array_shift($lines);
+
+        $servicios = array_map(function($line) {
+            $columns = preg_split('/\s{2,}/', $line);
+            return [
+                'repository' => $columns[0] ?? '',
+                'tag' => $columns[1] ?? '',
+                'image_id' => $columns[2] ?? '',
+                'created' => $columns[3] ?? '',
+                'size' => $columns[4] ?? '',
+            ];
+        }, $lines);
+
+        return view('vps.servicios_instalados', compact('servicios'));
+    }
 
 
     public function index($grupo_id)
@@ -35,6 +85,41 @@ class VpsController extends Controller
         $grupo = $user->obtenerGrupo($grupo_id);
         return view('vps.listar', compact('grupos', 'grupo', 'actividades', 'user', 'grupo_id', 'servidores', 'miembro'));
     }
+
+    public function instalar_servicio_docker($grupo_id, $vps_id, $servicio)
+    {
+        $vps = \App\Models\Servidor::where('id', $vps_id)->first();
+        $safeServicio = escapeshellarg($servicio);
+
+        // Pull the specified Docker service
+        $pullCommand = "docker pull {$safeServicio}";
+        $executionResult = $vps->ejecutar_comando($pullCommand);
+
+        // Fetch list of Docker images
+        $imagesCommand = "docker images";
+        $output = $vps->ejecutar_comando($imagesCommand);
+
+        // Parse the output into an array of services
+        $lines = explode("\n", trim($output));
+        // Remove the header row
+        array_shift($lines);
+
+        $servicios = array_map(function($line) {
+            $columns = preg_split('/\s{2,}/', $line);
+            return [
+                'repository' => $columns[0] ?? '',
+                'tag' => $columns[1] ?? '',
+                'image_id' => $columns[2] ?? '',
+                'created' => $columns[3] ?? '',
+                'size' => $columns[4] ?? '',
+            ];
+        }, $lines);
+
+        return view('vps.servicios_instalados', compact('servicios'));
+    }
+
+
+
 
 
     public function monitorizar($grupo_id, $vps_id)

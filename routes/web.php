@@ -50,6 +50,9 @@ Route::post('instalar_docker/{grupo_id}/{vps_id}', [\App\Http\Controllers\VpsCon
 Route::post('desinstalar_docker/{grupo_id}/{vps_id}', [\App\Http\Controllers\VpsController::class, 'desinstalar_docker'])->name('desinstalar_docker');
 Route::post('servicios_docker/{grupo_id}/{vps_id}', [\App\Http\Controllers\VpsController::class, 'servicios_docker'])->name('servicios_docker');
 Route::post('anadir_vps/{grupo_id}', [\App\Http\Controllers\VpsController::class, 'anadir'])->name('anadir_vps');
+Route::post('/instalar_servicio/{grupo_id}/vps/{vps_id}/{servicio}', [\App\Http\Controllers\VpsController::class, 'instalar_servicio_docker'])->name('instalar_servicio');
+Route::post('/ver_imagenes/{grupo_id}/vps/{vps_id}', [\App\Http\Controllers\VpsController::class, 'imagenes_instaladas'])->name('imagenes');
+Route::post('/administrar_servicios/{grupo_id}/vps/{vps_id}', [\App\Http\Controllers\VpsController::class, 'administrar_servicio'])->name('administrar_servicios');
 
 
 
