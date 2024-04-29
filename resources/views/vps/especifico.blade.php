@@ -2,6 +2,10 @@
 
 @section('content')
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/wc-bubble"></script>
+        <style>
+
+        </style>
     @vite(['resources/sass/app.scss', 'resources/js/graph.js','resources/js/app.js', 'resources/js/htmx.js', 'resources/js/event.js'])
 
     <div class="container my-4">
@@ -40,6 +44,9 @@
             </div>
         </div>
         <button hx-post="{{ route('monitorizar', [$grupo_id, $vps_id]) }}" hx-target="#response" hx-indicator="#spinner" class="btn btn-primary">Monitorizar servidor</button>
+        <chat-bubble >
+            <a href="{{route('asistente', ['grupo_id'=>$grupo_id, 'vps_id'=>$vps_id])}}">Cualquier duda puedes consultarme</a>
+        </chat-bubble>
         <div id="response"></div>
 
         <!-- Spinner -->
@@ -56,7 +63,7 @@
                 <li class="list-group-item" style="display: none;"><a href="#" class="stretched-link">Conocer la info de hardware del mismo</a></li>
                 <li class="list-group-item"><a href="#" class="stretched-link">Ejecutar custom scripts</a></li>
                 <li class="list-group-item"><a href="#" class="stretched-link">Conectarse con SSH directamente</a></li>
-                <li class="list-group-item"><a href="#" class="stretched-link">Acceder al asistente inteligente de ACS</a></li>
+
             </ul>
         @else
             <div class="alert alert-warning mt-4" role="alert">

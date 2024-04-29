@@ -14,6 +14,8 @@
         "vite": "^5.0.0"
     },
     "dependencies": {
-        "htmx": "^0.0.2"
+        "deep-chat": "^1.4.11",
+        "htmx": "^0.0.2",
+        "web-cli": "^1.0.0-prealpha"
     }
 }

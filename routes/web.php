@@ -53,6 +53,10 @@ Route::post('anadir_vps/{grupo_id}', [\App\Http\Controllers\VpsController::class
 Route::post('/instalar_servicio/{grupo_id}/vps/{vps_id}/{servicio}', [\App\Http\Controllers\VpsController::class, 'instalar_servicio_docker'])->name('instalar_servicio');
 Route::post('/ver_imagenes/{grupo_id}/vps/{vps_id}', [\App\Http\Controllers\VpsController::class, 'imagenes_instaladas'])->name('imagenes');
 Route::post('/administrar_servicios/{grupo_id}/vps/{vps_id}', [\App\Http\Controllers\VpsController::class, 'administrar_servicio'])->name('administrar_servicios');
+Route::post('/encender/{grupo_id}/vps/{vps_id}', [\App\Http\Controllers\VpsController::class, 'encender_servicio'])->name('encender_servicios');
+Route::post('/apagar/{grupo_id}/vps/{vps_id}', [\App\Http\Controllers\VpsController::class, 'apagar_servicio'])->name('apagar_servicios');
+Route::get('/asistente/{grupo_id}/vps/{vps_id}', [\App\Http\Controllers\VpsController::class, 'ia'])->name('asistente');
+Route::post('/hablar_asistente', [\App\Http\Controllers\VpsController::class, 'hablar'])->name('hablar_asistente');
 
 
 

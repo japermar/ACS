@@ -22,6 +22,7 @@
 
     });
 
+
 </script>
 
 @section('content')
@@ -36,6 +37,7 @@
             <sl-button hx-post="{{ route('servicios_docker', [$grupo_id, $servidor['id']]) }}" hx-target="#response"  variant="primary">Ver servicios docker en activo</sl-button>
             <sl-button hx-post="{{ route('imagenes', [$grupo_id, $servidor['id']]) }}" hx-target="#response"   variant="primary">Ver imagenes instaladas</sl-button>
             <sl-button hx-post="{{ route('administrar_servicios', [$grupo_id, $servidor['id']]) }}" hx-target="#response"   variant="primary">Encender servicios</sl-button>
+            <sl-button hx-post="{{ route('apagar_servicios', [$grupo_id, $servidor['id']]) }}" hx-target="#response"   variant="primary">Apagar todos los servicios</sl-button>
             <sl-dropdown>
                 <sl-button slot="trigger" variant="primary" id="imagenes" caret>Instalar Imagenes en Docker</sl-button>
                 <sl-menu>

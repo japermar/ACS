@@ -1,34 +1,46 @@
-<div class="details-group-example">
-
-    @foreach($servicios as $servicio)
-        <sl-details summary="{{ $servicio['repository'] }}" >
-
-            <p><strong>ID de la Imagen:</strong> {{ $servicio['image_id'] }}</p>
-            <p><strong>Version:</strong> {{ $servicio['tag'] }}</p>
-            <p><strong>Creado el:</strong> {{ $servicio['created'] }}</p>
-            <p><strong>Tamaño:</strong> {{ $servicio['size'] }}</p>
-        </sl-details>
-    @endforeach
-</div>
 <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const container = document.querySelector('.details-group-example');
-
-        // Close all other details when one is shown
-        container.addEventListener('sl-show', event => {
-            if (event.target.localName === 'sl-details') {
-                [...container.querySelectorAll('sl-details')].forEach(details => {
-                    if (details !== event.target) {
-                        details.removeAttribute('open');
-                    }
-                });
-            }
+        const switchContainers = document.querySelectorAll('.switch-container');
+        switchContainers.forEach(container => {
+            const switchEl = container.querySelector('sl-switch');
+            const labelEl = container.querySelector('.switch-label'); // Get the label/span for this switch
+            switchEl.addEventListener('sl-change', event => {
+                if (switchEl.checked) {
+                    labelEl.textContent = 'Encender';
+                } else {
+                    labelEl.textContent = 'Apagar';
+                }
+            });
         });
-    });
 </script>
 
-<style>
-    .details-group-example sl-details:not(:last-of-type) {
-        margin-bottom: var(--sl-spacing-2x-small);
+<form hx-post="{{ route('encender_servicios', [$grupo_id, $vps_id]) }}" hx-target="#manejado_servicios"  id="servicesForm">
+    @foreach($servicios as $servicio)
+        <sl-card class="card-header">
+            <div class="switch-container" slot="header">
+                <sl-switch id="switch_{{ $loop->index }}" value="{{$servicio['repository']}}" onclick="updateSwitchValue(this)">
+                <span class="switch-label">Apagar</span>
+                    </sl-switch>
+            </div>
+            <input type="hidden" name="estado[{{$servicio['repository']}}]" id="estado_{{ $loop->index }}" value="off">
+            <label>{{ $servicio['repository'] }}</label>
+        </sl-card>
+    @endforeach
+        <input type="submit" value="Ejecutar cambios">
+</form>
+{{--        <button variant="neutral" outline>Submit</button>--}}
+
+<div id="manejado_servicios"></div>
+
+
+<script>
+    function updateSwitchValue(switchElement) {
+        var input = document.getElementById('estado_' + switchElement.id.split('_')[1]);
+        console.log('switch element checked ? ', switchElement.checked);
+        console.log(switchElement);
+
+
+        input.value = switchElement.checked ? 'on' : 'off';
     }
-</style>
+</script>
+
+

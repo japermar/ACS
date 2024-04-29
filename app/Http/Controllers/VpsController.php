@@ -15,6 +15,50 @@ class VpsController extends Controller
     {
         $this->middleware('auth');
     }
+    public function hablar(Request $request)
+    {
+       return $request->mensaje;
+    }
+
+    public function apagar_servicio($grupo_id, $vps_id)
+    {
+        $vps = \App\Models\Servidor::where('id', $vps_id)->first();
+        $comando = "docker stop $(docker ps -q)";
+        $output = $vps->ejecutar_comando($comando);
+        return '<p>Se han apagado todos los servicios correctamente</p>';
+    }
+
+    public function ia()
+    {
+        return view('vps.asistente');
+
+    }
+
+
+
+    public function encender_servicio(Request $request, $grupo_id, $vps_id)
+    {
+        // Assuming you have a model Servidor that corresponds to your servers
+        $vps = \App\Models\Servidor::where('id', $vps_id)->first();
+
+        $estados = $request->input('estado');
+$resultado = '';
+$comando='';
+        foreach ($estados as $servicio => $estado) {
+            if ($estado == 'on') {
+                $comando = "docker run -d --name ${servicio} ${servicio}";
+            } else {
+                $comando = "docker stop {$servicio}";
+            }
+            $resultado .= $vps->ejecutar_comando($comando);
+        }
+
+    return $resultado;
+    }
+
+
+
+
     public function administrar_servicio($grupo_id, $vps_id)
     {
         $vps = \App\Models\Servidor::where('id', $vps_id)->first();
@@ -37,7 +81,7 @@ class VpsController extends Controller
             ];
         }, $lines);
 
-        return view('vps.servicios_instalados', compact('servicios'));
+        return view('vps.administrar_servicios', compact('servicios', 'grupo_id', 'vps_id'));
 
     }
 
@@ -225,11 +269,52 @@ class VpsController extends Controller
     public function servicios_docker($grupo_id, $vps_id)
     {
         $vps = \App\Models\Servidor::where('id', $vps_id)->first();
-        $class = 'alert-success';
-        $command = "docker ps";
+        $command = "docker ps --format 'table {{.ID}}\t{{.Image}}\t{{.Names}}\t{{.Status}}'";
         $executionResult = $vps->ejecutar_comando($command);
-        return '<p class="alert ' . $class . '" role="alert">' . htmlspecialchars($executionResult) . '</p>';
+
+        // Split the output into lines
+        $lines = explode("\n", trim($executionResult));
+
+        // Start with a style tag to add padding to table headers
+        $styles = '<style>
+        .docker-table th {
+            padding: 8px; /* Adjust padding as needed */
+            text-align: left;
+        }
+        .docker-table {
+            border-collapse: separate;
+            border-spacing: 15px 0; /* Adjust horizontal and vertical spacing as needed */
+        }
+        .docker-table td {
+            padding: 8px; /* Consistent padding with th elements */
+        }
+    </style>';
+
+        // Initialize an empty string to hold the HTML table, now with a class for styling
+        $htmlTable = $styles . '<table class="docker-table"><thead><tr>';
+
+        // Process the header
+        $headers = explode("\t", array_shift($lines));
+        foreach ($headers as $header) {
+            $htmlTable .= '<th>' . htmlspecialchars($header) . '</th>';
+        }
+        $htmlTable .= '</tr></thead><tbody>';
+
+        // Process each container's information
+        foreach ($lines as $line) {
+            $htmlTable .= '<tr>';
+            $columns = explode("\t", $line);
+            foreach ($columns as $column) {
+                $htmlTable .= '<td>' . htmlspecialchars($column) . '</td>';
+            }
+            $htmlTable .= '</tr>';
+        }
+
+        $htmlTable .= '</tbody></table>';
+
+        return $htmlTable;
     }
+
 
 
 }
