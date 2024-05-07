@@ -57,6 +57,11 @@ Route::post('/encender/{grupo_id}/vps/{vps_id}', [\App\Http\Controllers\VpsContr
 Route::post('/apagar/{grupo_id}/vps/{vps_id}', [\App\Http\Controllers\VpsController::class, 'apagar_servicio'])->name('apagar_servicios');
 Route::get('/asistente/{grupo_id}/vps/{vps_id}', [\App\Http\Controllers\VpsController::class, 'ia'])->name('asistente');
 Route::post('/hablar_asistente', [\App\Http\Controllers\VpsController::class, 'hablar'])->name('hablar_asistente');
+Route::get('/custom_scripts/{grupo_id}/vps/{vps_id}', [\App\Http\Controllers\VpsController::class, 'custom_scripts'])->name('ejecutar_custom_scripts');
+Route::post('/conexion_ssh/vps/{vps_id}', [\App\Http\Controllers\VpsController::class, 'ejecutar_comando'])->name('ejecutar_custom_script');
+Route::post('/bash_ejecutar/vps/{vps_id}', [\App\Http\Controllers\VpsController::class, 'ejecutar_bash_script'])->name('upload_bash_file');
+Route::get('/conexion_ssh/{grupo_id}/vps/{vps_id}', [\App\Http\Controllers\VpsController::class, 'custom_scripts'])->name('ejecutar_custom_scripts');
+Route::get('/custom_scripts/{grupo_id}/vps/{vps_id}', [\App\Http\Controllers\VpsController::class, 'mostar_custom_scripts_plantilla'])->name('mostar_custom_scripts_plantilla');
 
 
 

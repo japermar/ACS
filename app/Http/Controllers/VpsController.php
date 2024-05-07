@@ -11,6 +11,14 @@ use Spatie\Ssh\Ssh;
 class VpsController extends Controller
 {
 
+
+    public function mostar_custom_scripts_plantilla($grupo_id, $vps_id)
+    {
+        return view('vps.custom', compact( 'grupo_id', 'vps_id'));
+
+
+    }
+
     public function __construct()
     {
         $this->middleware('auth');
@@ -28,13 +36,40 @@ class VpsController extends Controller
         return '<p>Se han apagado todos los servicios correctamente</p>';
     }
 
+    public function ejecutar_bash_script(Request $request)
+    {
+        $file = $request->file('bash_file');
+        dd('file ', $file );
+    }
+
+    public function ejecutar_comando(Request $request)
+    {
+        $comando = $request->input('command');
+        $vps_id = $request->input('vps_id');
+        $vps = \App\Models\Servidor::where('id', $vps_id)->first();
+
+        if ($vps) {
+            $output = $vps->ejecutar_comando($comando);
+            $respuesta = '<p>La respuesta es: ' . $output . '</p>';
+        } else {
+            $respuesta = '<p>No se encontró el servidor con ID: ' . $vps_id . '</p>';
+        }
+
+        return $respuesta;
+    }
     public function ia()
     {
         return view('vps.asistente');
 
     }
 
+public function custom_scripts(Request $request, $grupo_id, $vps_id)
+{
+    // Assuming you have a model Servidor that corresponds to your servers
+    $vps = \App\Models\Servidor::where('id', $vps_id)->first();
 
+    return view('vps.custom_scripts', compact('vps_id'));
+}
 
     public function encender_servicio(Request $request, $grupo_id, $vps_id)
     {

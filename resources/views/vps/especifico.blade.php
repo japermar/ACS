@@ -61,8 +61,8 @@
             <ul class="list-group">
                 <li class="list-group-item"><a href="{{route('monitorizar_vps', ['grupo_id' =>$grupo_id, 'vps_id' =>$vps_id])}}" class="stretched-link">Instalar o desinstalar apps para este VPS</a></li>
                 <li class="list-group-item" style="display: none;"><a href="#" class="stretched-link">Conocer la info de hardware del mismo</a></li>
-                <li class="list-group-item"><a href="#" class="stretched-link">Ejecutar custom scripts</a></li>
-                <li class="list-group-item"><a href="#" class="stretched-link">Conectarse con SSH directamente</a></li>
+                <li class="list-group-item"><a href="{{route('mostar_custom_scripts_plantilla', ['grupo_id'=>$grupo_id, 'vps_id'=>$vps_id])}}" class="stretched-link">Ejecutar custom scripts</a></li>
+                <li class="list-group-item"><a href="{{route('ejecutar_custom_scripts', ['grupo_id'=>$grupo_id, 'vps_id'=>$vps_id])}}" class="stretched-link">Conectarse con SSH directamente</a></li>
 
             </ul>
         @else
