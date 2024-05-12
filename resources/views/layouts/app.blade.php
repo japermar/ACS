@@ -9,6 +9,9 @@
 
     <title>{{ config('app.name', 'Laravel') }}</title>
 
+    <!-- Icono de ordenador -->
+    <link rel="icon" href="https://fotocursonet.files.wordpress.com/2011/01/ordenador.jpg" type="image/png">
+
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">

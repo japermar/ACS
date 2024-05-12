@@ -1,67 +1,223 @@
 @extends('layouts.app')
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.15.0/cdn/themes/light.css"/>
-<script type="module"
-        src="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.15.0/cdn/shoelace-autoloader.js"></script>
+
 @section('content')
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.15.0/cdn/themes/light.css"/>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.15.0/cdn/shoelace-autoloader.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     @vite(['resources/sass/app.scss', 'resources/js/graph.js','resources/js/app.js', 'resources/js/htmx.js', 'resources/js/event.js'])
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.15.0/cdn/themes/light.css"/>
-    <script type="module"
-            src="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.15.0/cdn/shoelace-autoloader.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <head>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    </head>
+    <style>
+        .ai-info {
+            text-align: center;
+        }
 
-        @vite(['resources/sass/app.scss', 'resources/js/graph.js','resources/js/app.js', 'resources/js/htmx.js', 'resources/js/event.js'])
-        <style>
-            /* Establece el estilo general del contenedor */
-            #container {
-                display: flex; /* Utiliza flexbox para distribuir los espacios */
-                height: 100vh; /* Ajusta la altura del contenedor al 100% de la vista del viewport */
-            }
+        .ai-header {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            color: #333;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
 
-            /* Estilos comunes para las columnas */
-            #columnaUno, #columnaDos, #columnaTres {
-                flex: 1;  /* Cada columna toma un tercio del espacio disponible */
-                padding: 20px; /* Añade un poco de espacio alrededor del contenido de cada columna */
-                border-right: 1px solid #ccc; /* Añade un borde para diferenciar las columnas */
-                box-sizing: border-box; /* Incluye el padding y el borde en el cálculo del ancho */
-            }
+        .ai-image-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 2rem;
+        }
+        #columnOne {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
 
-            /* Elimina el borde de la última columna */
-            #columnaTres {
-                border-right: none;
-            }
+        .context-header {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #007bff;
+        }
 
-            .chat-container {
-                display: flex;
-                flex-direction: column; /* Organiza los elementos internos en columna */
-                justify-content: center; /* Centra los elementos verticalmente */
-            }
+        .group-info,
+        .server-info,
+        .hardware-info {
+            margin-bottom: 20px;
+        }
 
-            .chat-input {
-                margin-top: -20px; /* Eleva el input hacia arriba */
-                margin-bottom: 20px; /* Añade un margen inferior */
-            }
-        </style>
-        <div id="container">
-            <div id="columnaUno">
-                Toda la información de tu equipo
-                <div>team info</div>
-                <div>server info</div>
-            </div>
-            <div id="columnaDos" class="chat-container">
-                <p id="respuestaIA" class="chat-response">Aquí podrás ver la respuesta de nuestra Inteligencia Artificial</p>
-                <input type="text" id="chat" class="chat-input" placeholder="Escribe tu mensaje...">
-            </div>
-            <div id="columnaTres">
-                Información de nuestra IA
-                Modelo: <a href="https://huggingface.co/meta-llama/Meta-Llama-3-8B-Instruct">Meta LLama 3 8b Instruct</a>
-                <img src="https://i.ytimg.com/vi/pK8u4QfdLx0/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLCz6KiOU2oZp103RzDfa3NdsvMI6A" alt="Logo de la IA">
-            </div>
-        </div>
+        .group-info h4,
+        .server-info h4,
+        .hardware-info h4 {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #007bff;
+            margin-bottom: 10px;
+        }
 
+        .group-info p,
+        .server-info p,
+        .hardware-info p {
+            font-size: 1rem;
+            color: #333;
+            margin-bottom: 5px;
+        }
 
+        .server-info strong,
+        .hardware-info strong {
+            font-weight: bold;
+            color: #007bff;
+        }
+        .ai-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease-in-out;
+            width: 80%; /* Add this line to set the width of the image */
+            max-height: 60vh; /* Add this line to limit the maximum height of the image */
+            object-fit: contain; /* Add this line to ensure the image maintains its aspect ratio */
+        }
 
+        .ai-image:hover {
+            transform: scale(1.05);
+        }
+        /* General container styles */
+        #container {
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Column styles */
+        .column {
+            flex: 1;
+            padding: 20px;
+            box-sizing: border-box;
+            overflow-y: auto;
+        }
+
+        #columnOne {
+            background-color: #f8f9fa;
+        }
+
+        #columnTwo {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #columnThree {
+            background-color: #f1f3f5;
+        }
+
+        /* Chat styles */
+        .chat-container {
+            width: 100%;
+            max-width: 600px;
+            margin-bottom: 20px;
+        }
+
+        .chat-response {
+            background-color: #e9ecef;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        .chat-input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        #columnTwo {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .chat-container {
+            width: 100%;
+            max-width: 600px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .chat-header {
+            background-color: #007bff;
+            color: #fff;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .chat-header h3 {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+
+        .chat-body {
+            padding: 20px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .chat-response {
+            background-color: #f1f0f0;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        .chat-footer {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            background-color: #f8f9fa;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            margin-right: 10px;
+        }
+
+        .chat-send-button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .chat-send-button:hover {
+            background-color: #0056b3;
+        }
+
+        /* AI information styles */
+        .ai-info {
+            text-align: center;
+        }
+
+        .ai-info img {
+            max-width: 200px;
+            margin-top: 20px;
+        }
+    </style>
     <script>
         let mensajeIA = `Un usuario de mi aplicacion para manejar servidores online tiene esta duda MENSAJE_USUARIO. Contestaras en espanol y con instrucciones claras`
         async function enviarMensajeIA() {
@@ -86,14 +242,12 @@
                     ]
                 })
             };
-
             try {
                 const response = await fetch(request.url, {
                     method: request.method,
                     headers: request.headers,
                     body: request.body
                 });
-
                 if (response.ok) {
                     const data = await response.json();
                     let respuestaIA = document.getElementById('respuestaIA');
@@ -108,14 +262,11 @@
                 console.error('Error:', error);
             }
         }
-
         document.addEventListener('DOMContentLoaded', () => {
             let chatElementRef = document.getElementById('chat');
-
             chatElementRef.addEventListener('focusout', async () => {
                 await enviarMensajeIA();
             });
-
             chatElementRef.addEventListener('keydown', async (event) => {
                 if (event.key === 'Enter') {
                     await enviarMensajeIA();
@@ -123,5 +274,55 @@
             });
         });
     </script>
-    @endsection
+    <div id="container">
+        <div id="columnOne" class="column">
+            <h3 class="context-header">Contexto para mejorar tus preguntas a nuestra IA</h3>
+            <div class="group-info">
+                <h4>Nombre del grupo</h4>
+                <p>{{$grupo->nombre_grupo}}</p>
+            </div>
+            <div class="server-info">
+                <h4>Info del servidor</h4>
+                <p><strong>Nombre:</strong> {{$vps->nombre_servidor}}</p>
+                <p><strong>Dirección IP:</strong> {{$vps->direccion_ssh}}</p>
+                <p><strong>Puerto SSH:</strong> {{$vps->puerto_ssh}}</p>
+                <p><strong>Usuario SSH:</strong> {{$vps->usuario_ssh}}</p>
+            </div>
+            <div class="hardware-info">
+                <h4>Hardware del servidor</h4>
+                <p><strong>CPU:</strong> {{$hardware->cpu}}</p>
+                <p><strong>RAM:</strong> {{$hardware->ram}}</p>
+                <p><strong>Almacenamiento:</strong> {{$hardware->almacenamiento}}</p>
+                <p><strong>Velocidad de internet:</strong> {{$hardware->velocidad_red}}</p>
+            </div>
+        </div>
 
+        <div id="columnTwo" class="column">
+            <div class="chat-container">
+                <div class="chat-header">
+                    <h3>Habla con nuestra IA</h3>
+                </div>
+                <div class="chat-body">
+                    <div id="respuestaIA" class="chat-response">Aqui veras la respuesta de la IA</div>
+                </div>
+                <div class="chat-footer">
+                    <input type="text" id="chat" class="chat-input" placeholder="Escribe tu mensaje..">
+                    <button onclick="enviarMensajeIA" id="sendButton" class="chat-send-button">Enviar a la IA</button>
+                </div>
+            </div>
+        </div>
+        <div id="columnThree" class="column">
+            <div class="ai-info">
+                <h3 class="ai-header animate__animated animate__fadeInDown">AI Information</h3>
+                <p>Model: <a href="https://huggingface.co/meta-llama/Meta-Llama-3-8B-Instruct">Meta LLama 3 8b Instruct</a></p>
+                <div class="ai-image-container">
+                    <img class="ai-image animate__animated animate__zoomIn" src="https://i.ytimg.com/vi/pK8u4QfdLx0/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLCz6KiOU2oZp103RzDfa3NdsvMI6A" alt="AI Logo">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ... Existing JavaScript code ...
+    </script>
+@endsection

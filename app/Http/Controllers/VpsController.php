@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\GruposColaboracion;
 use App\Models\HardwareServidor;
 use App\Models\Servidor;
 use Illuminate\Http\Request;
@@ -36,12 +37,17 @@ class VpsController extends Controller
         return '<p>Se han apagado todos los servicios correctamente</p>';
     }
 
-    public function ejecutar_bash_script(Request $request)
+    public function ejecutar_bash_script(Request $request, $vps_id)
     {
-        $file = $request->file('bash_file');
-        dd('file ', $file );
+        $vps = \App\Models\Servidor::where('id', $vps_id)->first();
+        if ($request->hasFile('bash_file')) {
+            $file = $request->file('bash_file');
+            if ($file->getClientOriginalExtension() === 'sh') {
+                $content = file_get_contents($file->getPathname());
+                return $vps->ejecutar_comando($content);
+            }
+        }
     }
-
     public function ejecutar_comando(Request $request)
     {
         $comando = $request->input('command');
@@ -57,9 +63,13 @@ class VpsController extends Controller
 
         return $respuesta;
     }
-    public function ia()
+    public function ia($grupo_id,$vps_id)
     {
-        return view('vps.asistente');
+        $grupo = GruposColaboracion::where('id', $grupo_id)->first();
+        $vps = Servidor::where('id', $vps_id)->first();
+        $hardware = HardwareServidor::where('servidor_id', $vps_id)->first();
+
+        return view('vps.asistente', compact('grupo','vps','hardware'));
 
     }
 
@@ -310,18 +320,37 @@ $comando='';
         // Split the output into lines
         $lines = explode("\n", trim($executionResult));
 
-        // Start with a style tag to add padding to table headers
+        // Start with a style tag to add padding to table headers and other styles
         $styles = '<style>
-        .docker-table th {
-            padding: 8px; /* Adjust padding as needed */
-            text-align: left;
-        }
         .docker-table {
-            border-collapse: separate;
-            border-spacing: 15px 0; /* Adjust horizontal and vertical spacing as needed */
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            background-color: #fff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .docker-table th {
+            background-color: #ff5a5f;
+            color: #fff;
+            padding: 12px;
+            text-align: left;
+            font-weight: bold;
+            text-transform: uppercase;
         }
         .docker-table td {
-            padding: 8px; /* Consistent padding with th elements */
+            padding: 12px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .docker-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+        .docker-table tbody tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+        .docker-table tbody tr:hover {
+            background-color: #f1f3f5;
         }
     </style>';
 
