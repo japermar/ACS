@@ -64,7 +64,64 @@
         color: var(--sl-menu-item-color-active);
     }
 
-    /* Animation for the loading spinner */
+    /* Skeleton loader styles */
+    .skeleton-loader {
+        background-color: #f0f0f0;
+        border-radius: 4px;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .skeleton-loader::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, #f0f0f0, #e0e0e0, #f0f0f0);
+        animation: skeleton-loading 1.5s infinite;
+    }
+
+    @keyframes skeleton-loading {
+        0% {
+            transform: translateX(-100%);
+        }
+        100% {
+            transform: translateX(100%);
+        }
+    }
+
+    /* Additional styling */
+    body {
+        background-color: #f8f9fa;
+    }
+
+
+
+    h1 {
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 20px;
+        color: #333;
+    }
+
+    #response {
+        margin-top: 30px;
+        padding: 20px;
+        background-color: #f0f0f0;
+        border-radius: 8px;
+    }
+    .button-group-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+
+    .button-group-container sl-button-group {
+        flex: 1;
+    }
     .spinner-border {
         display: inline-block;
         width: 2rem;
@@ -75,7 +132,16 @@
         border-radius: 50%;
         animation: spinner-border 0.75s linear infinite;
     }
+    .button-group-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
 
+    .button-group-container sl-button-group {
+        flex: 1;
+    }
     @keyframes spinner-border {
         to {
             transform: rotate(360deg);
@@ -93,49 +159,59 @@
 
     <div class="container mt-5">
         <h1 class="mb-4">Ahora estás controlando el servidor {{$servidor['nombre_servidor']}}</h1>
-        <sl-button-group label="Alignment">
-            <sl-button hx-post="{{ route('revisar_docker', [$grupo_id, $servidor['id']]) }}" hx-target="#response" variant="primary">Revisar si Docker está instalado</sl-button>
-            <sl-button hx-post="{{ route('instalar_docker', [$grupo_id, $servidor['id']]) }}" hx-target="#response" variant="primary">Instalar Docker</sl-button>
-            <sl-button hx-post="{{ route('desinstalar_docker', [$grupo_id, $servidor['id']]) }}" hx-target="#response" variant="primary">Desinstalar Docker</sl-button>
-            <sl-button hx-post="{{ route('servicios_docker', [$grupo_id, $servidor['id']]) }}" hx-target="#response" variant="primary">Ver servicios Docker activos</sl-button>
-            <sl-button hx-post="{{ route('imagenes', [$grupo_id, $servidor['id']]) }}" hx-target="#response" variant="primary">Ver imágenes instaladas</sl-button>
-            <sl-button hx-post="{{ route('administrar_servicios', [$grupo_id, $servidor['id']]) }}" hx-target="#response" variant="primary">Encender servicios</sl-button>
-            <sl-button hx-post="{{ route('apagar_servicios', [$grupo_id, $servidor['id']]) }}" hx-target="#response" variant="primary">Apagar todos los servicios</sl-button>
-            <sl-dropdown>
-                <sl-button slot="trigger" variant="primary" id="imagenes" caret>Instalar Imágenes en Docker</sl-button>
-                <sl-menu>
-                    <sl-menu-item hx-post="{{ route('instalar_servicio', [$grupo_id, $servidor['id'], 'mysql']) }}" hx-target="#response">Instalar MySQL</sl-menu-item>
-                    <sl-menu-item hx-post="{{ route('instalar_servicio', [$grupo_id, $servidor['id'], 'alpine']) }}" hx-target="#response">Instalar Alpine</sl-menu-item>
-                    <sl-menu-item hx-post="{{ route('instalar_servicio', [$grupo_id, $servidor['id'], 'nginx']) }}" hx-target="#response">Instalar NGINX</sl-menu-item>
-                    <sl-menu-item hx-post="{{ route('instalar_servicio', [$grupo_id, $servidor['id'], 'redis']) }}" hx-target="#response">Instalar Redis</sl-menu-item>
-                    <sl-menu-item hx-post="{{ route('instalar_servicio', [$grupo_id, $servidor['id'], 'mongo']) }}" hx-target="#response">Instalar MongoDB</sl-menu-item>
-                    <sl-menu-item hx-post="{{ route('instalar_servicio', [$grupo_id, $servidor['id'], 'memcached']) }}" hx-target="#response">Instalar Memcached</sl-menu-item>
-                    <sl-menu-item hx-post="{{ route('instalar_servicio', [$grupo_id, $servidor['id'], 'amazonlinux']) }}" hx-target="#response">Instalar Amazon Linux</sl-menu-item>
-                    <sl-menu-item hx-post="{{ route('instalar_servicio', [$grupo_id, $servidor['id'], 'traefik']) }}" hx-target="#response">Instalar Traefik</sl-menu-item>
-                    <sl-menu-item hx-post="{{ route('instalar_servicio', [$grupo_id, $servidor['id'], 'caddy']) }}" hx-target="#response">Instalar Caddy</sl-menu-item>
-                    <sl-menu-item hx-post="{{ route('instalar_servicio', [$grupo_id, $servidor['id'], 'adminer']) }}" hx-target="#response">Instalar Adminer</sl-menu-item>
-                    <sl-menu-item hx-post="{{ route('instalar_servicio', [$grupo_id, $servidor['id'], 'postgres']) }}" hx-target="#response">Instalar PostgreSQL</sl-menu-item>
-                    <sl-menu-item hx-post="{{ route('instalar_servicio', [$grupo_id, $servidor['id'], 'elasticsearch']) }}" hx-target="#response">Instalar Elasticsearch</sl-menu-item>
-                    <sl-menu-item hx-post="{{ route('instalar_servicio', [$grupo_id, $servidor['id'], 'rabbitmq']) }}" hx-target="#response">Instalar RabbitMQ</sl-menu-item>
-                    <sl-menu-item hx-post="{{ route('instalar_servicio', [$grupo_id, $servidor['id'], 'grafana']) }}" hx-target="#response">Instalar Grafana</sl-menu-item>
-                    <sl-menu-item hx-post="{{ route('instalar_servicio', [$grupo_id, $servidor['id'], 'prometheus']) }}" hx-target="#response">Instalar Prometheus</sl-menu-item>
-                    <sl-menu-item hx-post="{{ route('instalar_servicio', [$grupo_id, $servidor['id'], 'jenkins']) }}" hx-target="#response">Instalar Jenkins</sl-menu-item>
-                    <sl-menu-item hx-post="{{ route('instalar_servicio', [$grupo_id, $servidor['id'], 'gitlab']) }}" hx-target="#response">Instalar GitLab</sl-menu-item>
-                    <sl-menu-item hx-post="{{ route('instalar_servicio', [$grupo_id, $servidor['id'], 'wordpress']) }}" hx-target="#response">Instalar WordPress</sl-menu-item>
-                    <sl-menu-item hx-post="{{ route('instalar_servicio', [$grupo_id, $servidor['id'], 'drupal']) }}" hx-target="#response">Instalar Drupal</sl-menu-item>
-                    <sl-menu-item hx-post="{{ route('instalar_servicio', [$grupo_id, $servidor['id'], 'magento']) }}" hx-target="#response">Instalar Magento</sl-menu-item>
-                    <sl-menu-item hx-post="{{ route('instalar_servicio', [$grupo_id, $servidor['id'], 'nextcloud']) }}" hx-target="#response">Instalar Nextcloud</sl-menu-item>
-                    <sl-menu-item hx-post="{{ route('instalar_servicio', [$grupo_id, $servidor['id'], 'python']) }}" hx-target="#response">Instalar Python</sl-menu-item>
-                </sl-menu>
-            </sl-dropdown>
-        </sl-button-group>
-
-        <div id="response"></div>
-
-        <div class="text-center" style="display: none;">
-            <div class="spinner-border" role="status">
-                <span class="sr-only">Loading...</span>
-            </div>
+        <div class="button-group-container">
+            <sl-button-group label="Alignment">
+                <sl-button hx-post="{{ route('revisar_docker', [$grupo_id, $servidor['id']]) }}" hx-target="#response" variant="primary">Revisar si Docker está instalado</sl-button>
+                <sl-button hx-post="{{ route('instalar_docker', [$grupo_id, $servidor['id']]) }}" hx-target="#response" variant="primary">Instalar Docker</sl-button>
+                <sl-button hx-post="{{ route('desinstalar_docker', [$grupo_id, $servidor['id']]) }}" hx-target="#response" variant="primary">Desinstalar Docker</sl-button>
+                <sl-button hx-post="{{ route('servicios_docker', [$grupo_id, $servidor['id']]) }}" hx-target="#response" variant="primary">Ver servicios Docker activos</sl-button>
+                <sl-button hx-post="{{ route('imagenes', [$grupo_id, $servidor['id']]) }}" hx-target="#response" variant="primary">Ver imágenes instaladas</sl-button>
+                <sl-button hx-post="{{ route('administrar_servicios', [$grupo_id, $servidor['id']]) }}" hx-target="#response" variant="primary">Encender servicios</sl-button>
+                <sl-button hx-post="{{ route('apagar_servicios', [$grupo_id, $servidor['id']]) }}" hx-target="#response" variant="primary">Apagar todos los servicios</sl-button>
+                <sl-dropdown>
+                    <sl-button slot="trigger" variant="primary" id="imagenes" caret>Instalar Imágenes en Docker</sl-button>
+                    <sl-menu>
+                        <sl-menu-item hx-post="{{ route('instalar_servicio', [$grupo_id, $servidor['id'], 'mysql']) }}" hx-target="#response">Instalar MySQL</sl-menu-item>
+                        <sl-menu-item hx-post="{{ route('instalar_servicio', [$grupo_id, $servidor['id'], 'alpine']) }}" hx-target="#response">Instalar Alpine</sl-menu-item>
+                        <sl-menu-item hx-post="{{ route('instalar_servicio', [$grupo_id, $servidor['id'], 'nginx']) }}" hx-target="#response">Instalar NGINX</sl-menu-item>
+                        <sl-menu-item hx-post="{{ route('instalar_servicio', [$grupo_id, $servidor['id'], 'redis']) }}" hx-target="#response">Instalar Redis</sl-menu-item>
+                        <sl-menu-item hx-post="{{ route('instalar_servicio', [$grupo_id, $servidor['id'], 'mongo']) }}" hx-target="#response">Instalar MongoDB</sl-menu-item>
+                        <sl-menu-item hx-post="{{ route('instalar_servicio', [$grupo_id, $servidor['id'], 'memcached']) }}" hx-target="#response">Instalar Memcached</sl-menu-item>
+                        <sl-menu-item hx-post="{{ route('instalar_servicio', [$grupo_id, $servidor['id'], 'amazonlinux']) }}" hx-target="#response">Instalar Amazon Linux</sl-menu-item>
+                        <sl-menu-item hx-post="{{ route('instalar_servicio', [$grupo_id, $servidor['id'], 'traefik']) }}" hx-target="#response">Instalar Traefik</sl-menu-item>
+                        <sl-menu-item hx-post="{{ route('instalar_servicio', [$grupo_id, $servidor['id'], 'caddy']) }}" hx-target="#response">Instalar Caddy</sl-menu-item>
+                        <sl-menu-item hx-post="{{ route('instalar_servicio', [$grupo_id, $servidor['id'], 'adminer']) }}" hx-target="#response">Instalar Adminer</sl-menu-item>
+                        <sl-menu-item hx-post="{{ route('instalar_servicio', [$grupo_id, $servidor['id'], 'postgres']) }}" hx-target="#response">Instalar PostgreSQL</sl-menu-item>
+                        <sl-menu-item hx-post="{{ route('instalar_servicio', [$grupo_id, $servidor['id'], 'elasticsearch']) }}" hx-target="#response">Instalar Elasticsearch</sl-menu-item>
+                        <sl-menu-item hx-post="{{ route('instalar_servicio', [$grupo_id, $servidor['id'], 'rabbitmq']) }}" hx-target="#response">Instalar RabbitMQ</sl-menu-item>
+                        <sl-menu-item hx-post="{{ route('instalar_servicio', [$grupo_id, $servidor['id'], 'grafana']) }}" hx-target="#response">Instalar Grafana</sl-menu-item>
+                        <sl-menu-item hx-post="{{ route('instalar_servicio', [$grupo_id, $servidor['id'], 'prometheus']) }}" hx-target="#response">Instalar Prometheus</sl-menu-item>
+                        <sl-menu-item hx-post="{{ route('instalar_servicio', [$grupo_id, $servidor['id'], 'jenkins']) }}" hx-target="#response">Instalar Jenkins</sl-menu-item>
+                        <sl-menu-item hx-post="{{ route('instalar_servicio', [$grupo_id, $servidor['id'], 'gitlab']) }}" hx-target="#response">Instalar GitLab</sl-menu-item>
+                        <sl-menu-item hx-post="{{ route('instalar_servicio', [$grupo_id, $servidor['id'], 'wordpress']) }}" hx-target="#response">Instalar WordPress</sl-menu-item>
+                        <sl-menu-item hx-post="{{ route('instalar_servicio', [$grupo_id, $servidor['id'], 'drupal']) }}" hx-target="#response">Instalar Drupal</sl-menu-item>
+                        <sl-menu-item hx-post="{{ route('instalar_servicio', [$grupo_id, $servidor['id'], 'magento']) }}" hx-target="#response">Instalar Magento</sl-menu-item>
+                        <sl-menu-item hx-post="{{ route('instalar_servicio', [$grupo_id, $servidor['id'], 'nextcloud']) }}" hx-target="#response">Instalar Nextcloud</sl-menu-item>
+                        <sl-menu-item hx-post="{{ route('instalar_servicio', [$grupo_id, $servidor['id'], 'python']) }}" hx-target="#response">Instalar Python</sl-menu-item>
+                    </sl-menu>
+                </sl-dropdown>            </sl-button-group>
         </div>
+
+        <div id="response" style="margin-top: 20px;">
+            <div id="skeleton-loader" class="skeleton-loader" style="height: 200px;"></div>
+        </div>
+
+        <script>
+            document.addEventListener('htmx:afterSwap', function(event) {
+                var skeletonLoader = document.getElementById('skeleton-loader');
+                if (skeletonLoader) {
+                    skeletonLoader.remove();
+                }
+            });
+        </script>
+        <div class="text-center" style="display: none;">
+            <div class="spi                <span class="sr-only">Loading...</span>
+        </div>
+    </div>
     </div>
 @endsection

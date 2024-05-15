@@ -219,11 +219,24 @@
         }
     </style>
     <script>
-        let mensajeIA = `Un usuario de mi aplicacion para manejar servidores online tiene esta duda MENSAJE_USUARIO. Contestaras en espanol y con instrucciones claras`
         async function enviarMensajeIA() {
+            let mensajeIA = `Un usuario de mi aplicación para manejar servidores online tiene la siguiente duda:
+
+"MENSAJE_USUARIO"
+
+La aplicación permite a los usuarios administrar y configurar servidores web, bases de datos y servicios en la nube.
+
+Por favor, proporciona una respuesta detallada y clara en español, siguiendo estos puntos:
+1. Explica los conceptos relevantes de manera concisa y fácil de entender.
+2. Ofrece instrucciones paso a paso para resolver el problema o responder a la pregunta.
+3. Si es relevante, incluye ejemplos o fragmentos de código para ilustrar la solución.
+4. Estructura tu respuesta utilizando viñetas o pasos numerados para una mejor legibilidad.
+
+Recuerda adaptar tu respuesta al nivel de conocimiento técnico del usuario y proporcionar recomendaciones adicionales si es necesario.`;
+
             let chatElementRef = document.getElementById('chat');
-            mensajeIA = mensajeIA.replace('MENSAJE_USUARIO', chatElementRef.value)
-            // Send inner HTML to the API
+            mensajeIA = mensajeIA.replace('MENSAJE_USUARIO', chatElementRef.value);
+           // Send inner HTML to the API
             const request = {
                 "url": "https://api.awanllm.com/v1/chat/completions",
                 "method": "POST",

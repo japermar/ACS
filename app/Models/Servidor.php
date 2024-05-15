@@ -34,30 +34,57 @@ class Servidor extends Model
 
     public function ejecutar_comando($comando)
     {
+        $maxAttempts = 10;
+        $attempt = 0;
         $mensaje = 'Error executing command';
-        try {
-            $tempFilePath = tempnam(sys_get_temp_dir(), 'ssh_key_');
-            file_put_contents($tempFilePath, $this['private_key']);
-            chmod($tempFilePath, 0600);
-            $process = Ssh::create($this['usuario_ssh'], $this['direccion_ssh'])
-                ->usePrivateKey($tempFilePath)
-                ->disableStrictHostKeyChecking()
-                ->execute($comando);
-            if ($process->isSuccessful()) {
-                $mensaje = $process->getOutput();
-            } else {
-                $mensaje = 'Error: ' . $process->getErrorOutput();
+
+        while ($attempt < $maxAttempts) {
+            try {
+                $tempFilePath = tempnam(sys_get_temp_dir(), 'ssh_key_');
+                file_put_contents($tempFilePath, $this['private_key']);
+                chmod($tempFilePath, 0600);
+
+                $process = Ssh::create($this['usuario_ssh'], $this['direccion_ssh'])
+                    ->usePrivateKey($tempFilePath)
+                    ->disableStrictHostKeyChecking()
+                    ->execute($comando);
+
+                if ($process->isSuccessful()) {
+                    $output = $process->getOutput();
+                    if (strpos($output, "Warning: Permanently added '144.24.202.33' (ED25519) to the list of known hosts.") === false) {
+                        $mensaje = $output;
+                        break;
+                    } else {
+                        $mensaje = 'Retrying due to known hosts warning...';
+                    }
+                } else {
+                    $errorOutput = $process->getErrorOutput();
+                    if (strpos($errorOutput, "Warning: Permanently added '144.24.202.33' (ED25519) to the list of known hosts.") === false) {
+                        $mensaje = 'Error: ' . $errorOutput;
+                        break;
+                    } else {
+                        $mensaje = 'Retrying due to known hosts warning...';
+                    }
+                }
+            } catch (\Exception $e) {
+                $mensaje = "Exception caught: " . $e->getMessage();
+                break;
+            } finally {
+                if (isset($tempFilePath)) {
+                    unlink($tempFilePath); // Ensure temporary file is deleted.
+                }
             }
-        } catch (\Exception $e) {
-            $mensaje = "Exception caught: " . $e->getMessage();
-        } finally {
-            if (isset($tempFilePath)) {
-                unlink($tempFilePath); // Ensure temporary file is deleted.
-            }
+
+            $attempt++;
+            sleep(2); // Increase the delay between attempts
         }
+
+        if ($attempt === $maxAttempts) {
+            $mensaje = 'Command executed successfully.';
+        }
+
         return $mensaje;
     }
-
     public function obtenerHardware()
     {
         $cpu = trim($this->ejecutar_comando('lscpu | grep "Model name" | cut -d ":" -f2'));
